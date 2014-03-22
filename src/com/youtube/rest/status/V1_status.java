@@ -1,9 +1,15 @@
 package com.youtube.rest.status;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import com.youtube.dao.Oracle308tube;
 
 /**
  * This is the root path for our restful api service In the web.xml file, we
@@ -36,7 +42,7 @@ import javax.ws.rs.core.MediaType;
 public class V1_status {
 
 	// version of the api
-	private static final String api_version = "00.01.00"; // version of the api
+	private static final String api_version = "00.02.00"; // version of the api
 
 	/**
 	 * This method sits at the root of the api. It will return the name of this
@@ -66,6 +72,45 @@ public class V1_status {
 	@Produces(MediaType.TEXT_HTML)
 	public String returnVersion() {
 		return "<p>Version:</p> " + api_version;
+	}
+
+	@Path("/database")
+	@GET
+	@Produces(MediaType.TEXT_HTML)
+	public String returnDatabaseStatus() {
+		PreparedStatement query = null;
+		String myString = null;
+		String returnString = null;
+		Connection conn = null;
+
+		try {
+			conn = Oracle308tube.Oracle308tubeConn().getConnection();
+			query = conn
+					.prepareStatement("SELECT to_char(sysdate, 'YYYY-MM-DD HH24:MI:SS') DATETIME FROM sys.dual");
+			ResultSet rs = query.executeQuery();
+
+			while (rs.next()) {
+				myString = rs.getString("DATETIME");
+			}
+
+			query.close(); // statement
+			returnString = "<p>Database Status</p> <p>Database Date/Time return: "
+					+ myString + "</p> ";
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			try {
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return returnString;
 	}
 
 }
