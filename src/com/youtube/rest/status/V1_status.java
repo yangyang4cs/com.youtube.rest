@@ -20,10 +20,22 @@ import javax.ws.rs.core.MediaType;
  * 
  * API Version: http://localhost:7001/com.youtube.rest/api/v1/status/version
  * 
+ * GET, POST, PUT, DELETE, HEAD are defined in the HTTP/1.1 protocal. In the
+ * Jersey framework, we will convering the following:
+ * 
+ * @GET - most used, read-only and public access method
+ * @POST - used to insert/add data OR submitting data like Login pages. With
+ *       HTTPS you can protect the data
+ * @PUT - used mainly for updating data but can be used fro inserting/adding
+ *      data
+ * @DELETE - used to delete data
+ * @HEAD - used to return meta-data of the resource
  */
 @Path("v1/status/")
+// route to java class
 public class V1_status {
 
+	// version of the api
 	private static final String api_version = "00.01.00"; // version of the api
 
 	/**
@@ -48,7 +60,9 @@ public class V1_status {
 	 * @return String - version number of the api
 	 */
 	@Path("/version")
+	// route to specific method
 	@GET
+	// HTTP verb required to access method
 	@Produces(MediaType.TEXT_HTML)
 	public String returnVersion() {
 		return "<p>Version:</p> " + api_version;
