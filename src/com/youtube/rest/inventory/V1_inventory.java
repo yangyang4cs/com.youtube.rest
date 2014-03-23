@@ -9,6 +9,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.codehaus.jettison.json.JSONArray;
 
@@ -41,9 +42,9 @@ import com.youtube.util.ToJSON;
 @Path("v1/inventory/")
 public class V1_inventory {
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public String returnAllPcParts() {
+	// @GET
+	// @Produces(MediaType.APPLICATION_JSON)
+	public String returnAllPcParts_returnString() {
 		PreparedStatement query = null;
 		Connection conn = null;
 		String returnString = null;
@@ -82,6 +83,52 @@ public class V1_inventory {
 		}
 
 		return returnString;
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response returnAllPcParts() {
+		PreparedStatement query = null;
+		Connection conn = null;
+		String returnString = null;
+		Response rb = null;
+
+		try {
+			conn = Oracle308tube.Oracle308tubeConn().getConnection();
+			query = conn.prepareStatement("select * from PC_PARTS");
+			ResultSet rs = query.executeQuery();
+
+			JSONArray json = ToJSON.INSTANCE.toJSONArray(rs);
+			if (json != null) {
+				returnString = json.toString();
+			}
+
+			rb = Response.ok(returnString).build();
+
+			rs.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			if (query != null) {
+				try {
+					query.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return rb;
 	}
 
 }
