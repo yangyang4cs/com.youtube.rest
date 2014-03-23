@@ -7,6 +7,8 @@ import java.sql.Types;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 
+import org.owasp.esapi.ESAPI;
+
 /**
  * ToJSON will be the first utility java class. Take database data and convert
  * it into JSON format.
@@ -32,6 +34,8 @@ public class ToJSON {
 	 */
 	public JSONArray toJSONArray(ResultSet rs) throws Exception {
 		JSONArray json = new JSONArray(); // JSON array that will be returned
+
+		String temp = null;
 
 		try {
 			// we will need the column names, this will save the table meta-data
@@ -84,7 +88,13 @@ public class ToJSON {
 						println("ToJSON: NVARCHAR");
 
 					} else if (Types.VARCHAR == colType) {
-						obj.put(colName, rs.getString(colName));
+
+						temp = rs.getString(colName);
+						temp = ESAPI.encoder().canonicalize(temp);
+						temp = ESAPI.encoder().encodeForHTML(temp);
+						obj.put(colName, temp);
+
+						// obj.put(colName, rs.getString(colName));
 						println("ToJSON: VARCHAR");
 
 					} else if (Types.TINYINT == colType) {
