@@ -39,6 +39,14 @@ public class V2_inventory {
 		return null;
 	}
 
+	/*
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response returnErrorOnBrand() throws Exception {
+		return Response.status(400).entity("Error: please specify brand for this search").build();
+	}
+	*/
+
 	@Path("/{brand}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
