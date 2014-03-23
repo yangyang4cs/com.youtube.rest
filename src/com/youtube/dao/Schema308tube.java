@@ -18,7 +18,7 @@ public class Schema308tube extends Oracle308tube {
 	 * @param brand
 	 * @return
 	 */
-	public static JSONArray returnBrandParts(@QueryParam("brand") String brand) {
+	public static JSONArray returnBrandParts(String brand) {
 		PreparedStatement query = null;
 		Connection conn = null;
 		JSONArray json = null;
@@ -29,6 +29,51 @@ public class Schema308tube extends Oracle308tube {
 			conn = oraclePcPartsConnection();
 			query = conn.prepareStatement(sql);
 			query.setString(1, brand.toUpperCase());
+
+			ResultSet rs = query.executeQuery();
+			json = ToJSON.INSTANCE.toJSONArray(rs);
+			rs.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			if (query != null) {
+				try {
+					query.close();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return json;
+	}
+
+	/**
+	 * 
+	 * @param brand
+	 * @param item_number
+	 * @return
+	 */
+	public static JSONArray returnBrandParts(String brand, int item_number) {
+		PreparedStatement query = null;
+		Connection conn = null;
+		JSONArray json = null;
+
+		try {
+			String sql = "select PC_PARTS_PK, PC_PARTS_TITLE, PC_PARTS_CODE, PC_PARTS_MAKER, PC_PARTS_AVAIL, PC_PARTS_DESC from PC_PARTS where UPPER(PC_PARTS_MAKER) = ? and PC_PARTS_CODE = ?";
+
+			conn = oraclePcPartsConnection();
+			query = conn.prepareStatement(sql);
+			query.setString(1, brand.toUpperCase());
+			query.setInt(2, item_number);
 
 			ResultSet rs = query.executeQuery();
 			json = ToJSON.INSTANCE.toJSONArray(rs);

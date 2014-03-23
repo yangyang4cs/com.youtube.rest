@@ -72,4 +72,29 @@ public class V2_inventory {
 		return null;
 	}
 
+	@Path("/{brand}/{item_number}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response returnBrand(@PathParam("brand") String brand, @PathParam("item_number") int item_number) {
+		try {
+			if (brand == null) {
+				return Response.status(500)
+						.entity("Error: please specify brand for this search")
+						.build();
+			}
+
+			JSONArray json = Schema308tube.returnBrandParts(brand, item_number);
+			if (json != null) {
+				String returnString = json.toString();
+				return Response.ok(returnString).build();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(500)
+					.entity("Server was not able to process your request")
+					.build();
+		}
+		return null;
+	}
+
 }
