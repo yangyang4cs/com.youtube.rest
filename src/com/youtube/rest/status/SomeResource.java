@@ -8,8 +8,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
- * @Produce specify the media type that a method will produce and send back to
- *          the client.
+ * @Produce specify the media type that a method will produce and send back to the client.
  * 
  *          When you use @Produces at the class level, its treated as a default
  * 
@@ -19,14 +18,12 @@ import javax.ws.rs.core.MediaType;
  * 
  *          It does do some encoding but nothing extensive
  * 
- *          You define your own as seen in the example or you can use predefined
- *          MediaType. This is what the project will be using.
+ *          You define your own as seen in the example or you can use predefined MediaType. This is what the project will be using.
  * 
- * @Consumes Basically tells your application to expect data to be sent in the
- *           body of the HTTP message
+ * @Consumes Basically tells your application to expect data to be sent in the body of the HTTP message
  * 
- *           You will need to define what type of data sent up. Again this
- *           another way to limit what HTTP message can access specific methods.
+ *           You will need to define what type of data sent up. Again this another way to limit what HTTP message can access specific
+ *           methods.
  * 
  *           You can define your own or used the predefin MediaType.
  */
@@ -53,8 +50,7 @@ public class SomeResource {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	public void saveMessage(String message) {
 		// Look at the HTTP Post body
-		// The body will be brought into the java code as a String called
-		// message
+		// The body will be brought into the java code as a String called message
 		// void indicates not data is returned
 	}
 

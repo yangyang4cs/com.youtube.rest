@@ -5,13 +5,63 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.ws.rs.QueryParam;
-
 import org.codehaus.jettison.json.JSONArray;
 
 import com.youtube.util.ToJSON;
 
 public class Schema308tube extends Oracle308tube {
+
+	/**
+	 * 
+	 * @param PC_PARTS_PK
+	 * @param PC_PARTS_TITLE
+	 * @param PC_PARTS_CODE
+	 * @param PC_PARTS_MAKER
+	 * @param PC_PARTS_AVAIL
+	 * @param PC_PARTS_DESC
+	 * @return
+	 */
+	public int insertINtoPC_PARTS(String PC_PARTS_PK, String PC_PARTS_TITLE, String PC_PARTS_CODE, String PC_PARTS_MAKER, String PC_PARTS_AVAIL, String PC_PARTS_DESC) {
+		PreparedStatement query = null;
+		Connection conn = null;
+
+		try {
+			String sql = "insert into PC_PARTS (PC_PARTS_PK, PC_PARTS_TITLE, PC_PARTS_CODE, PC_PARTS_MAKER, PC_PARTS_AVAIL, PC_PARTS_DESC) values (?,?,?,?,?,?)";
+			/*
+			 * If this was a real application, you should do data validation here before starting to insert data into the database.
+			 */
+			conn = oraclePcPartsConnection();
+			query = conn.prepareStatement(sql);
+
+			int pkInt = Integer.parseInt(PC_PARTS_PK);
+			query.setInt(1, pkInt);
+
+			query.setString(2, PC_PARTS_TITLE);
+			query.setString(3, PC_PARTS_CODE);
+			query.setString(4, PC_PARTS_MAKER);
+
+			int avilInt = Integer.parseInt(PC_PARTS_AVAIL);
+			query.setInt(5, avilInt);
+
+			query.setString(6, PC_PARTS_DESC);
+
+			query.executeUpdate();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 500; // internal server error
+
+		} finally {
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return 200; // success
+	}
 
 	/**
 	 * 

@@ -95,7 +95,7 @@ public class V1_inventory {
 
 		try {
 			conn = Oracle308tube.Oracle308tubeConn().getConnection();
-			query = conn.prepareStatement("select * from PC_PARTS");
+			query = conn.prepareStatement("select * from PC_PARTS order by PC_PARTS_PK asc");
 			ResultSet rs = query.executeQuery();
 
 			JSONArray json = ToJSON.INSTANCE.toJSONArray(rs);
